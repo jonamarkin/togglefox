@@ -1,8 +1,7 @@
 package com.markin.togglefox.strategy;
 
-import com.markin.togglefox.event.DomainEvent;
-import com.markin.togglefox.valueobject.EvaluationContext;
-import com.markin.togglefox.valueobject.FlagEvaluationResult;
+import com.markin.togglefox.model.EvaluationContext;
+import com.markin.togglefox.model.FlagEvaluationResult;
 
 import java.util.Map;
 import java.util.Objects;

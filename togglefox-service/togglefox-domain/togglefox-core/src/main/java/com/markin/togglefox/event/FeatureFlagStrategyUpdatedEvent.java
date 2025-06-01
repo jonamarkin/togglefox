@@ -1,6 +1,6 @@
 package com.markin.togglefox.event;
 
-import com.markin.togglefox.valueobject.FeatureFlagId;
+import com.markin.togglefox.model.FeatureFlagId;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

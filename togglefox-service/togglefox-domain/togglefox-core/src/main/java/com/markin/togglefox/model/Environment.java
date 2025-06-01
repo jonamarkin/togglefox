@@ -1,4 +1,4 @@
-package com.markin.togglefox.valueobject;
+package com.markin.togglefox.model;
 
 import java.util.Objects;
 

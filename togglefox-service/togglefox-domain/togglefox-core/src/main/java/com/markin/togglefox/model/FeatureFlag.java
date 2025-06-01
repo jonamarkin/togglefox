@@ -2,10 +2,6 @@ package com.markin.togglefox.model;
 
 import com.markin.togglefox.event.*;
 import com.markin.togglefox.strategy.RolloutStrategy;
-import com.markin.togglefox.valueobject.Environment;
-import com.markin.togglefox.valueobject.EvaluationContext;
-import com.markin.togglefox.valueobject.FeatureFlagId;
-import com.markin.togglefox.valueobject.FlagEvaluationResult;
 
 import java.time.LocalDateTime;
 import java.util.*;
