@@ -1,27 +1,28 @@
 package com.markin.togglefox.event;
 
+import com.markin.togglefox.model.Environment;
 import com.markin.togglefox.model.FeatureFlagId;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class FeatureFlagStrategyUpdatedEvent implements DomainEvent{
+public class FeatureFlagStrategyUpdatedEvent extends AbstractDomainEvent{
 
     private final FeatureFlagId flagId;
     private final String flagName;
-    private final String strategyType;
-    private final LocalDateTime occurredOn;
+    private final Environment environment;
+    private final String previousStrategyType;
+    private final String newStrategyType;
 
-    public FeatureFlagStrategyUpdatedEvent(FeatureFlagId flagId, String flagName, String strategyType) {
-        this.flagId = Objects.requireNonNull(flagId);
-        this.flagName = Objects.requireNonNull(flagName);
-        this.strategyType = Objects.requireNonNull(strategyType);
-        this.occurredOn = LocalDateTime.now();
-    }
-
-    @Override
-    public LocalDateTime getOccurredOn() {
-        return occurredOn;
+    public FeatureFlagStrategyUpdatedEvent(FeatureFlagId flagId, String flagName, Environment environment,
+                                           String previousStrategyType, String newStrategyType,
+                                           String updatedBy) {
+        super(flagId.getValue(), "FeatureFlag", updatedBy);
+        this.flagId = flagId;
+        this.flagName = flagName;
+        this.environment = environment;
+        this.previousStrategyType = previousStrategyType;
+        this.newStrategyType = newStrategyType;
     }
 
     @Override
@@ -37,7 +38,15 @@ public class FeatureFlagStrategyUpdatedEvent implements DomainEvent{
         return flagName;
     }
 
-    public String getStrategyType() {
-        return strategyType;
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public String getPreviousStrategyType() {
+        return previousStrategyType;
+    }
+
+    public String getNewStrategyType() {
+        return newStrategyType;
     }
 }
