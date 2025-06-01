@@ -7,6 +7,7 @@
         <groupId>com.markin.togglefox</groupId>
         <artifactId>togglefox-service</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>togglefox-domain</artifactId>
