@@ -4,33 +4,24 @@ import com.markin.togglefox.model.FeatureFlagId;
 
 import java.util.Objects;
 
-public class UpdateStrategyCommand {
-    private final FeatureFlagId flagId;
-    private final String strategyType;     // "percentage", "user_targeting", "attribute_based"
-    private final Object strategyConfig;   // Strategy-specific configuration
-    private final String updatedBy;
-
-    public UpdateStrategyCommand(FeatureFlagId flagId, String strategyType,
-                                 Object strategyConfig, String updatedBy) {
-        this.flagId = Objects.requireNonNull(flagId);
-        this.strategyType = Objects.requireNonNull(strategyType);
-        this.strategyConfig = strategyConfig;
-        this.updatedBy = Objects.requireNonNull(updatedBy);
+public record UpdateStrategyCommand(
+        FeatureFlagId flagId,
+        String strategyType,
+        Object strategyConfig,
+        String updatedBy
+) {
+    public UpdateStrategyCommand {
+        Objects.requireNonNull(flagId, "Flag ID cannot be null");
+        Objects.requireNonNull(strategyType, "Strategy type cannot be null");
+        Objects.requireNonNull(updatedBy, "Updated by cannot be null");
     }
 
-    public FeatureFlagId getFlagId() {
-        return flagId;
+    // Factory methods for different strategy types
+    public static UpdateStrategyCommand forPercentageStrategy(FeatureFlagId flagId, int percentage, String updatedBy) {
+        return new UpdateStrategyCommand(flagId, "percentage", new PercentageStrategyConfig(percentage), updatedBy);
     }
 
-    public String getStrategyType() {
-        return strategyType;
-    }
-
-    public Object getStrategyConfig() {
-        return strategyConfig;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
+    public static UpdateStrategyCommand forUserTargeting(FeatureFlagId flagId, UserTargetingStrategyConfig config, String updatedBy) {
+        return new UpdateStrategyCommand(flagId, "user_targeting", config, updatedBy);
     }
 }
