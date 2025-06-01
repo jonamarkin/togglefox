@@ -2,6 +2,7 @@ package com.markin.togglefox.event;
 
 import com.markin.togglefox.model.Environment;
 import com.markin.togglefox.model.FeatureFlagId;
+import com.markin.togglefox.strategy.RolloutStrategy;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -11,13 +12,13 @@ public class FeatureFlagStrategyUpdatedEvent extends AbstractDomainEvent{
     private final FeatureFlagId flagId;
     private final String flagName;
     private final Environment environment;
-    private final String previousStrategyType;
-    private final String newStrategyType;
+    private final RolloutStrategy previousStrategyType;
+    private final RolloutStrategy newStrategyType;
 
     public FeatureFlagStrategyUpdatedEvent(FeatureFlagId flagId, String flagName, Environment environment,
-                                           String previousStrategyType, String newStrategyType,
+                                           RolloutStrategy previousStrategyType, RolloutStrategy newStrategyType,
                                            String updatedBy) {
-        super(flagId.getValue(), "FeatureFlag", updatedBy);
+        super(flagId.value(), "FeatureFlag", updatedBy);
         this.flagId = flagId;
         this.flagName = flagName;
         this.environment = environment;
@@ -42,11 +43,11 @@ public class FeatureFlagStrategyUpdatedEvent extends AbstractDomainEvent{
         return environment;
     }
 
-    public String getPreviousStrategyType() {
+    public RolloutStrategy getPreviousStrategyType() {
         return previousStrategyType;
     }
 
-    public String getNewStrategyType() {
+    public RolloutStrategy getNewStrategyType() {
         return newStrategyType;
     }
 }

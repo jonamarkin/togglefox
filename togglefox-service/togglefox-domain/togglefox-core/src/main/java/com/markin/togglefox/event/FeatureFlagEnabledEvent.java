@@ -14,7 +14,7 @@ public class FeatureFlagEnabledEvent extends AbstractDomainEvent {
 
     public FeatureFlagEnabledEvent(FeatureFlagId flagId, String flagName, Environment environment,
                                    String enabledBy, String reason) {
-        super(flagId.getValue(), "FeatureFlag", enabledBy);
+        super(flagId.value(), "FeatureFlag", enabledBy);
         this.flagId = flagId;
         this.flagName = flagName;
         this.environment = environment;

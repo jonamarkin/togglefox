@@ -32,7 +32,7 @@ public class FeatureFlag {
         this.updatedAt = this.createdAt;
         this.tags = new HashSet<>();
 
-        addDomainEvent(new FeatureFlagCreatedEvent(this.id, this.name, this.environment));
+        addDomainEvent(new FeatureFlagCreatedEvent(this.id, this.name, this.description, this.environment, this.createdBy));
     }
 
     public static FeatureFlag create(String name, String description,
@@ -80,32 +80,33 @@ public class FeatureFlag {
     /**
      * Enable the feature flag
      */
-    public void enable() {
+    public void enable(String enabledBy, String reason) {
         if (!this.enabled) {
             this.enabled = true;
             this.updatedAt = LocalDateTime.now();
-            addDomainEvent(new FeatureFlagEnabledEvent(this.id, this.name));
+            addDomainEvent(new FeatureFlagEnabledEvent(this.id, this.name, this.environment, enabledBy, reason));
         }
     }
 
     /**
      * Disable the feature flag
      */
-    public void disable() {
+    public void disable(String disabledBy, String reason) {
         if (this.enabled) {
             this.enabled = false;
             this.updatedAt = LocalDateTime.now();
-            addDomainEvent(new FeatureFlagDisabledEvent(this.id, this.name));
+            addDomainEvent(new FeatureFlagDisabledEvent(this.id, this.name, this.environment, disabledBy, reason));
         }
     }
 
     /**
      * Update rollout strategy
      */
-    public void updateRolloutStrategy(RolloutStrategy strategy) {
+    public void updateRolloutStrategy(RolloutStrategy strategy, String updatedBy) {
+        RolloutStrategy previousStrategy = this.rolloutStrategy;
         this.rolloutStrategy = strategy;
         this.updatedAt = LocalDateTime.now();
-        addDomainEvent(new FeatureFlagStrategyUpdatedEvent(this.id, this.name, strategy.getType()));
+        addDomainEvent(new FeatureFlagStrategyUpdatedEvent(this.id, this.name, this.environment, previousStrategy, strategy, updatedBy));
     }
 
     /**

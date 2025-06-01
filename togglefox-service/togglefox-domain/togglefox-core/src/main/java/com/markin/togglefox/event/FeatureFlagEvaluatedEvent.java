@@ -13,7 +13,7 @@ public class FeatureFlagEvaluatedEvent extends AbstractDomainEvent{
 
     public FeatureFlagEvaluatedEvent(FeatureFlagId flagId, String flagName, Environment environment,
                                      String userId, boolean result, String evaluationReason) {
-        super(flagId.getValue(), "FeatureFlag", "system");
+        super(flagId.value(), "FeatureFlag", "system");
         this.flagId = flagId;
         this.flagName = flagName;
         this.environment = environment;

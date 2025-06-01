@@ -81,7 +81,7 @@ public class QueryFlagService implements QueryFlagUseCase {
     public Optional<FeatureFlag> getFlagById(FeatureFlagId flagId) {
         Objects.requireNonNull(flagId, "Flag ID cannot be null");
 
-        logger.debug("Querying flag by ID: {}", flagId.getValue());
+        logger.debug("Querying flag by ID: {}", flagId.value());
 
         try {
             // For ID-based queries, go directly to database as cache is name+environment based
@@ -90,15 +90,15 @@ public class QueryFlagService implements QueryFlagUseCase {
             if (flag.isPresent()) {
                 // Cache the flag for future name+environment queries
                 cacheRepository.cacheFlag(flag.get());
-                logger.debug("Found and cached flag by ID: {}", flagId.getValue());
+                logger.debug("Found and cached flag by ID: {}", flagId.value());
             } else {
-                logger.debug("Flag not found by ID: {}", flagId.getValue());
+                logger.debug("Flag not found by ID: {}", flagId.value());
             }
 
             return flag;
 
         } catch (Exception e) {
-            logger.error("Failed to query flag by ID: {}", flagId.getValue(), e);
+            logger.error("Failed to query flag by ID: {}", flagId.value(), e);
             return Optional.empty();
         }
     }

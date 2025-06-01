@@ -28,7 +28,7 @@ public class ManageFlagService implements ManageFlagUseCase {
         FeatureFlag flag = repository.findById(command.flagId())
                 .orElseThrow(() -> new IllegalArgumentException("Feature flag not found: " + command.flagId()));
 
-        flag.enable();
+        flag.enable(command.updatedBy(), command.reason());
 
         // Update the flag in the repository
         FeatureFlag updatedFlag = repository.save(flag);
@@ -47,7 +47,7 @@ public class ManageFlagService implements ManageFlagUseCase {
         FeatureFlag flag = repository.findById(command.flagId())
                 .orElseThrow(() -> new IllegalArgumentException("Feature flag not found: " + command.flagId()));
 
-        flag.disable();
+        flag.disable(command.updatedBy(), command.reason());
 
         // Update the flag in the repository
         FeatureFlag updatedFlag = repository.save(flag);
