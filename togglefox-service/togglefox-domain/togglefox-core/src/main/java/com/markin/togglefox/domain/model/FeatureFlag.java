@@ -1,7 +1,6 @@
 package com.markin.togglefox.domain.model;
 
 import com.markin.togglefox.domain.event.*;
-import com.markin.togglefox.event.*;
 import com.markin.togglefox.domain.strategy.RolloutStrategy;
 
 import java.time.LocalDateTime;

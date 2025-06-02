@@ -7,7 +7,6 @@ import com.markin.togglefox.domain.strategy.PercentageRolloutStrategy;
 import com.markin.togglefox.domain.strategy.RolloutStrategy;
 import com.markin.togglefox.domain.strategy.UserTargetingStrategy;
 import com.markin.togglefox.dto.command.EnableFlagCommand;
-import com.markin.togglefox.dto.command.ToggleFlagCommand;
 import com.markin.togglefox.domain.model.FeatureFlag;
 import com.markin.togglefox.dto.command.UpdateStrategyCommand;
 import com.markin.togglefox.port.in.ManageFlagUseCase;

@@ -1,5 +1,6 @@
 package com.markin.togglefox.dataaccess.repository;
 
+import com.markin.togglefox.dataaccess.mapper.FeatureFlagMapper;
 import com.markin.togglefox.domain.model.Environment;
 import com.markin.togglefox.domain.model.FeatureFlag;
 import com.markin.togglefox.domain.model.FeatureFlagId;
