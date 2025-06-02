@@ -16,8 +16,6 @@
         <module>togglefox-container</module>
         <module>togglefox-data-access</module>
         <module>togglefox-domain</module>
-        <module>togglefox-domain/togglefox-core</module>
-        <module>togglefox-domain/togglefox-application-service</module>
     </modules>
 
     <properties>
