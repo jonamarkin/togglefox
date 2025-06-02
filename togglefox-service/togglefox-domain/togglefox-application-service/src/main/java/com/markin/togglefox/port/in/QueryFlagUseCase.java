@@ -1,8 +1,8 @@
 package com.markin.togglefox.port.in;
 
-import com.markin.togglefox.model.Environment;
-import com.markin.togglefox.model.FeatureFlag;
-import com.markin.togglefox.model.FeatureFlagId;
+import com.markin.togglefox.domain.model.Environment;
+import com.markin.togglefox.domain.model.FeatureFlag;
+import com.markin.togglefox.domain.model.FeatureFlagId;
 
 import java.util.List;
 import java.util.Optional;

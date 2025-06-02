@@ -1,8 +1,8 @@
 package com.markin.togglefox.service;
 
-import com.markin.togglefox.model.Environment;
-import com.markin.togglefox.model.FeatureFlag;
-import com.markin.togglefox.model.FeatureFlagId;
+import com.markin.togglefox.domain.model.Environment;
+import com.markin.togglefox.domain.model.FeatureFlag;
+import com.markin.togglefox.domain.model.FeatureFlagId;
 import com.markin.togglefox.port.in.QueryFlagUseCase;
 import com.markin.togglefox.port.out.CacheRepository;
 import com.markin.togglefox.port.out.FeatureFlagRepository;

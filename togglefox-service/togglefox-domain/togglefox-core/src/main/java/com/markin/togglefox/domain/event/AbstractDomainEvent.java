@@ -1,4 +1,4 @@
-package com.markin.togglefox.event;
+package com.markin.togglefox.domain.event;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

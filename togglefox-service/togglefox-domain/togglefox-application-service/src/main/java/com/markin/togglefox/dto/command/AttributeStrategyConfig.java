@@ -1,6 +1,6 @@
 package com.markin.togglefox.dto.command;
 
-import com.markin.togglefox.strategy.AttributeBasedStrategy;
+import com.markin.togglefox.domain.strategy.AttributeBasedStrategy;
 
 import java.util.Objects;
 

@@ -1,28 +1,11 @@
 package com.markin.togglefox.port.out;
 
-import com.markin.togglefox.event.DomainEvent;
-
-import java.util.List;
+import com.markin.togglefox.domain.event.DomainEvent;
 
 public interface EventPublisher {
     /**
-     * Publish a single domain event
+     * Publish a domain event
      */
     void publish(DomainEvent event);
-
-    /**
-     * Publish multiple domain events atomically
-     */
-    void publishAll(Iterable<DomainEvent> events);
-
-    /**
-     * Publish event asynchronously
-     */
-    void publishAsync(DomainEvent event);
-
-    /**
-     * Publish multiple events asynchronously
-     */
-    void publishAllAsync(Iterable<DomainEvent> events);
 
 }

@@ -1,29 +1,53 @@
 package com.markin.togglefox.dto.command;
 
-import com.markin.togglefox.model.Environment;
+import com.markin.togglefox.domain.model.Environment;
 
+import java.util.Map;
 import java.util.Objects;
 
-public record CreateFlagCommand(
-        String name,
-        String description,
-        Environment environment,
-        String createdBy
-) {
-    public CreateFlagCommand {
-        Objects.requireNonNull(name, "Name cannot be null");
-        Objects.requireNonNull(environment, "Environment cannot be null");
-        Objects.requireNonNull(createdBy, "Created by cannot be null");
+public class CreateFlagCommand {
 
-        // Validation logic
-        if (name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be empty");
-        }
-        if (name.length() > 100) {
-            throw new IllegalArgumentException("Name cannot exceed 100 characters");
-        }
+    private final String name;
+    private final String description;
+    private final String environment;
+    private final String strategyType;
+    private final Map<String, Object> strategyConfig;
 
-        // Normalize the name
-        name = name.trim();
+    public CreateFlagCommand(String name, String description, String environment,
+                             String strategyType, Map<String, Object> strategyConfig) {
+        this.name = Objects.requireNonNull(name, "Name cannot be null");
+        this.description = description;
+        this.environment = Objects.requireNonNull(environment, "Environment cannot be null");
+        this.strategyType = Objects.requireNonNull(strategyType, "Strategy type cannot be null");
+        this.strategyConfig = strategyConfig;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public String getStrategyType() {
+        return strategyType;
+    }
+
+    public Map<String, Object> getStrategyConfig() {
+        return strategyConfig;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateFlagCommand{" +
+                "name='" + name + '\'' +
+                ", environment='" + environment + '\'' +
+                ", strategyType='" + strategyType + '\'' +
+                '}';
     }
 }

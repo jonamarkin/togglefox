@@ -1,21 +1,32 @@
 package com.markin.togglefox.port.in;
 
+import com.markin.togglefox.domain.model.FeatureFlag;
+import com.markin.togglefox.domain.model.FeatureFlagId;
+import com.markin.togglefox.dto.command.EnableFlagCommand;
 import com.markin.togglefox.dto.command.ToggleFlagCommand;
+import com.markin.togglefox.dto.command.UpdateStrategyCommand;
+
+import java.util.Optional;
 
 public interface ManageFlagUseCase {
 
     /**
-     * Use case for managing feature flag state (enable/disable)
-     * Used by administrators to control flag availability
+     * Enable a feature flag
      */
+    void enableFlag(EnableFlagCommand command);
 
     /**
-     * Enable a feature flag in a specific environment
+     * Disable a feature flag
      */
-    void enableFlag(ToggleFlagCommand command);
+    void disableFlag(FeatureFlagId flagId);
 
     /**
-     * Disable a feature flag in a specific environment
+     * Update rollout strategy
      */
-    void disableFlag(ToggleFlagCommand command);
+    void updateStrategy(UpdateStrategyCommand command);
+
+    /**
+     * Get a feature flag by ID
+     */
+    Optional<FeatureFlag> getFlag(FeatureFlagId flagId);
 }

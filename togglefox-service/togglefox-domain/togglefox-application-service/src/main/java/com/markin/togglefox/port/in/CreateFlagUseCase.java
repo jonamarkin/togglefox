@@ -1,12 +1,12 @@
 package com.markin.togglefox.port.in;
 
+import com.markin.togglefox.domain.model.FeatureFlag;
 import com.markin.togglefox.dto.command.CreateFlagCommand;
-import com.markin.togglefox.model.FeatureFlagId;
+import com.markin.togglefox.domain.model.FeatureFlagId;
 
 public interface CreateFlagUseCase {
     /**
-     * Creates a new feature flag with basic information
-     * Flag starts disabled with no rollout strategy
+     * Create a new feature flag
      */
-    FeatureFlagId createFlag(CreateFlagCommand command);
+    FeatureFlag createFlag(CreateFlagCommand command);
 }

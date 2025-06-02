@@ -1,7 +1,7 @@
-package com.markin.togglefox.event;
+package com.markin.togglefox.domain.event;
 
-import com.markin.togglefox.model.Environment;
-import com.markin.togglefox.model.FeatureFlagId;
+import com.markin.togglefox.domain.model.Environment;
+import com.markin.togglefox.domain.model.FeatureFlagId;
 
 public class FeatureFlagEvaluatedEvent extends AbstractDomainEvent{
     private final FeatureFlagId flagId;

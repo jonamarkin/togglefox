@@ -1,4 +1,4 @@
-package com.markin.togglefox.exception;
+package com.markin.togglefox.domain.exception;
 
 public class FlagAlreadyExistsException extends RuntimeException{
     public FlagAlreadyExistsException(String message) {

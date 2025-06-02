@@ -1,56 +1,67 @@
 package com.markin.togglefox.service;
 
-import com.markin.togglefox.exception.FlagNotFoundException;
-import com.markin.togglefox.model.EvaluationContext;
-import com.markin.togglefox.model.FeatureFlag;
-import com.markin.togglefox.model.FlagEvaluationResult;
+import com.markin.togglefox.domain.exception.FlagNotFoundException;
+import com.markin.togglefox.domain.model.*;
+import com.markin.togglefox.dto.query.EvaluateFlagQuery;
 import com.markin.togglefox.port.in.FlagEvaluationUseCase;
 import com.markin.togglefox.port.out.CacheRepository;
 import com.markin.togglefox.port.out.FeatureFlagRepository;
 
+import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
 
 public class FlagEvaluationService implements FlagEvaluationUseCase {
 
     private final FeatureFlagRepository repository;
-    private final CacheRepository cacheRepository;
+    private final CacheRepository cache;
 
-    public FlagEvaluationService(FeatureFlagRepository repository, CacheRepository cacheRepository) {
-        this.repository = Objects.requireNonNull(repository);
-        this.cacheRepository = Objects.requireNonNull(cacheRepository);
+    public FlagEvaluationService(FeatureFlagRepository repository, CacheRepository cache) {
+        this.repository = repository;
+        this.cache = cache;
     }
 
-
-
     @Override
-    public FlagEvaluationResult evaluateFlag(String flagName, EvaluationContext context) {
-        //Check evaluation cache first
-        Optional<FlagEvaluationResult> cachedResult = cacheRepository.getCachedEvaluationResult(flagName, context.getUserId(), context.getEnvironment());
+    public FlagEvaluationResult evaluateFlag(EvaluateFlagQuery query) {
+        Environment environment = Environment.of(query.getEnvironment());
 
-        if (cachedResult.isPresent()) {
-            return cachedResult.get();
+        // Try cache first
+        Optional<FeatureFlag> cachedFlag = findFlagInCache(query.getFlagName(), environment);
+        FeatureFlag flag = cachedFlag.orElseGet(() -> findAndCacheFlag(query.getFlagName(), environment));
+
+        if (flag == null) {
+            return FlagEvaluationResult.disabled(
+                    FeatureFlagId.of("unknown"),
+                    "Feature flag not found: " + query.getFlagName()
+            );
         }
 
-        //Check flag cache
-        Optional<FeatureFlag> cachedFlag = cacheRepository.getFlag(flagName, context.getEnvironment());
+        // Build evaluation context
+        EvaluationContext context = query.getUserId() != null
+                ? EvaluationContext.forUserWithAttributes(query.getUserId(), query.getAttributes())
+                : EvaluationContext.anonymous();
 
-        FeatureFlag featureFlag;
-        if (cachedFlag.isPresent()) {
-            featureFlag = cachedFlag.get();
-        } else {
-            // If not in cache, fetch from repository
-            featureFlag = repository.findByNameAndEnvironment(flagName, context.getEnvironment())
-                    .orElseThrow(() -> new FlagNotFoundException("Feature flag not found: " + flagName));
-            // Cache the fetched flag
-            cacheRepository.cacheFlag(featureFlag);
+        return flag.evaluate(context);
+    }
+
+    private Optional<FeatureFlag> findFlagInCache(String flagName, Environment environment) {
+        return Optional.empty(); // Simplified for now
+
+        /** TODO: Implement cache lookup logic
+         * Example:
+         * String cacheKey = flagName + ":" + environment.getName();
+         * return cache.get(cacheKey, FeatureFlag.class);
+         */
+    }
+
+    private FeatureFlag findAndCacheFlag(String flagName, Environment environment) {
+        Optional<FeatureFlag> flag = repository.findByNameAndEnvironment(flagName, environment);
+
+        if (flag.isPresent()) {
+            // Cache for 5 minutes
+            cache.put(flag.get().getId(), flag.get(), Duration.ofMinutes(5));
         }
 
-        // Evaluate the flag using its strategies
-        FlagEvaluationResult evaluationResult = featureFlag.evaluate(context);
-        // Cache the evaluation result
-        cacheRepository.cacheEvaluationResult(flagName, context.getUserId(), context.getEnvironment(), evaluationResult);
-
-        return evaluationResult;
+        return flag.orElse(null);
     }
 }

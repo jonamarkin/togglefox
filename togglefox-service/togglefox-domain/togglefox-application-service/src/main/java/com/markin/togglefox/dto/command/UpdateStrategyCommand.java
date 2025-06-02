@@ -1,27 +1,31 @@
 package com.markin.togglefox.dto.command;
 
-import com.markin.togglefox.model.FeatureFlagId;
+import com.markin.togglefox.domain.model.FeatureFlagId;
 
+import java.util.Map;
 import java.util.Objects;
 
-public record UpdateStrategyCommand(
-        FeatureFlagId flagId,
-        String strategyType,
-        Object strategyConfig,
-        String updatedBy
-) {
-    public UpdateStrategyCommand {
-        Objects.requireNonNull(flagId, "Flag ID cannot be null");
-        Objects.requireNonNull(strategyType, "Strategy type cannot be null");
-        Objects.requireNonNull(updatedBy, "Updated by cannot be null");
+public class UpdateStrategyCommand {
+
+    private final String flagId;
+    private final String strategyType;
+    private final Map<String, Object> strategyConfig;
+
+    public UpdateStrategyCommand(String flagId, String strategyType, Map<String, Object> strategyConfig) {
+        this.flagId = Objects.requireNonNull(flagId, "Flag ID cannot be null");
+        this.strategyType = Objects.requireNonNull(strategyType, "Strategy type cannot be null");
+        this.strategyConfig = strategyConfig;
     }
 
-    // Factory methods for different strategy types
-    public static UpdateStrategyCommand forPercentageStrategy(FeatureFlagId flagId, int percentage, String updatedBy) {
-        return new UpdateStrategyCommand(flagId, "percentage", new PercentageStrategyConfig(percentage), updatedBy);
-    }
+    public String getFlagId() { return flagId; }
+    public String getStrategyType() { return strategyType; }
+    public Map<String, Object> getStrategyConfig() { return strategyConfig; }
 
-    public static UpdateStrategyCommand forUserTargeting(FeatureFlagId flagId, UserTargetingStrategyConfig config, String updatedBy) {
-        return new UpdateStrategyCommand(flagId, "user_targeting", config, updatedBy);
+    @Override
+    public String toString() {
+        return "UpdateStrategyCommand{" +
+                "flagId='" + flagId + '\'' +
+                ", strategyType='" + strategyType + '\'' +
+                '}';
     }
 }
