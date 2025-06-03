@@ -9,4 +9,5 @@ public interface CreateFlagUseCase {
      * Create a new feature flag
      */
     FeatureFlag createFlag(CreateFlagCommand command);
+
 }

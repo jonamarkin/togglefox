@@ -56,6 +56,7 @@ public class CreateFlagService implements CreateFlagUseCase {
         return savedFlag;
     }
 
+
     private RolloutStrategy createStrategy(FeatureFlagId flagId, String strategyType, Map<String, Object> config) {
         switch (strategyType.toUpperCase()) {
             case "PERCENTAGE":

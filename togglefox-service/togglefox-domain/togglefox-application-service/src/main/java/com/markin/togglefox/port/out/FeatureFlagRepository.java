@@ -44,4 +44,9 @@ public interface FeatureFlagRepository {
      */
     boolean existsByNameAndEnvironment(String name, Environment environment);
 
+    /**
+     * Get all feature flags
+     */
+    List<FeatureFlag> findAll();
+
 }

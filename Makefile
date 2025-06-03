@@ -51,11 +51,11 @@ dev-debug: ## Start development environment with debug enabled
 
 deps-up: ## Start only dependencies (PostgreSQL, Redis)
 	@echo "$(GREEN)Starting dependencies...$(RESET)"
-	@docker-compose up -d postgres redis
+	@docker compose -f $(COMPOSE_FILE) up -d postgres redis
 
 deps-down: ## Stop dependencies
 	@echo "$(YELLOW)Stopping dependencies...$(RESET)"
-	@docker-compose down postgres redis
+	@docker compose -f $(COMPOSE_FILE) down postgres redis
 
 ##@ Build & Test
 clean: ## Clean build artifacts
@@ -119,21 +119,21 @@ docker-build: build ## Build Docker image
 
 docker-run: ## Run application in Docker
 	@echo "$(GREEN)Running application in Docker...$(RESET)"
-	@docker-compose up -d
+	@docker compose -f $(COMPOSE_FILE) up -d
 	@echo "$(GREEN)✓ Application started$(RESET)"
 	@echo "$(CYAN)API available at: http://localhost:8080$(RESET)"
 	@echo "$(CYAN)Swagger UI: http://localhost:8080/swagger-ui.html$(RESET)"
 
 docker-stop: ## Stop Docker containers
 	@echo "$(YELLOW)Stopping Docker containers...$(RESET)"
-	@docker-compose down
+	@docker compose -f $(COMPOSE_FILE) down
 
 docker-logs: ## Show Docker logs
-	@docker-compose logs -f togglefox
+	@docker compose -f $(COMPOSE_FILE) logs -f togglefox
 
 docker-clean: ## Clean Docker images and containers
 	@echo "$(YELLOW)Cleaning Docker resources...$(RESET)"
-	@docker-compose down -v --rmi all --remove-orphans
+	@docker compose -f $(COMPOSE_FILE) down -v --rmi all --remove-orphans
 	@docker system prune -af
 
 ##@ Quick Actions
@@ -181,13 +181,13 @@ db-migrate: ## Run database migrations
 db-reset: ## Reset database (WARNING: destroys all data)
 	@echo "$(RED)WARNING: This will destroy all data!$(RESET)"
 	@read -p "Are you sure? [y/N] " confirm && [ "$confirm" = "y" ] || exit 1
-	@docker-compose down -v
-	@docker-compose up -d postgres redis
+	@docker compose -f $(COMPOSE_FILE) down -v
+	@docker compose -f $(COMPOSE_FILE) up -d postgres redis
 	@echo "$(GREEN)✓ Database reset completed$(RESET)"
 
 db-console: ## Open database console
 	@echo "$(GREEN)Opening database console...$(RESET)"
-	@docker-compose exec postgres psql -U togglefox -d togglefox
+	@docker compose -f $(COMPOSE_FILE) exec postgres psql -U togglefox -d togglefox
 
 ##@ Documentation
 docs: ## Generate project documentation
@@ -228,7 +228,7 @@ package: build ## Package application for deployment
 	@echo "$(GREEN)Packaging application...$(RESET)"
 	@mkdir -p dist
 	@cp togglefox-service/togglefox-container/target/togglefox-container-*.jar dist/
-	@cp docker-compose.yml dist/
+	@cp infrastructure/docker-compose.yml dist/
 	@cp -r infrastructure dist/
 	@tar -czf dist/togglefox-$(VERSION).tar.gz -C dist .
 	@echo "$(GREEN)✓ Package created: dist/togglefox-$(VERSION).tar.gz$(RESET)"
@@ -260,7 +260,7 @@ metrics: ## Show detailed metrics
 install-tools: ## Install required development tools
 	@echo "$(GREEN)Installing development tools...$(RESET)"
 	@command -v docker >/dev/null 2>&1 || { echo "$(RED)Docker is required but not installed$(RESET)"; exit 1; }
-	@command -v docker-compose >/dev/null 2>&1 || { echo "$(RED)Docker Compose is required but not installed$(RESET)"; exit 1; }
+	@command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1 || { echo "$(RED)Docker Compose is required but not installed$(RESET)"; exit 1; }
 	@command -v mvn >/dev/null 2>&1 || { echo "$(RED)Maven is required but not installed$(RESET)"; exit 1; }
 	@command -v java >/dev/null 2>&1 || { echo "$(RED)Java 17+ is required but not installed$(RESET)"; exit 1; }
 	@command -v jq >/dev/null 2>&1 || { echo "$(YELLOW)jq not found, installing...$(RESET)"; sudo apt-get install -y jq || brew install jq; }
@@ -278,7 +278,7 @@ version: ## Show version information
 status: ## Show service status
 	@echo "$(CYAN)Service Status$(RESET)"
 	@echo "$(CYAN)==============$(RESET)"
-	@docker-compose ps
+	@docker compose -f $(COMPOSE_FILE) ps
 
 ##@ Profiles
 profile-dev: ## Run with development profile
@@ -297,13 +297,13 @@ profile-prod: ## Run with production profile
 backup: ## Backup database
 	@echo "$(GREEN)Creating database backup...$(RESET)"
 	@mkdir -p backups
-	@docker-compose exec -T postgres pg_dump -U togglefox togglefox > backups/backup-$(shell date +%Y%m%d-%H%M%S).sql
+	@docker compose -f $(COMPOSE_FILE) exec -T postgres pg_dump -U togglefox togglefox > backups/backup-$(shell date +%Y%m%d-%H%M%S).sql
 	@echo "$(GREEN)✓ Database backup created in backups/$(RESET)"
 
 restore: ## Restore database from backup (specify BACKUP_FILE=filename)
 	@echo "$(GREEN)Restoring database from backup...$(RESET)"
 	@test -n "$(BACKUP_FILE)" || { echo "$(RED)Please specify BACKUP_FILE=filename$(RESET)"; exit 1; }
-	@docker-compose exec -T postgres psql -U togglefox -d togglefox < backups/$(BACKUP_FILE)
+	@docker compose -f $(COMPOSE_FILE) exec -T postgres psql -U togglefox -d togglefox < backups/$(BACKUP_FILE)
 	@echo "$(GREEN)✓ Database restored from $(BACKUP_FILE)$(RESET)"
 
 ##@ Troubleshooting
@@ -313,12 +313,12 @@ debug: ## Debug common issues
 	@echo "$(GREEN)Checking port availability...$(RESET)"
 	@netstat -an | grep :8080 | head -5 || echo "Port 8080 is available"
 	@echo "$(GREEN)Checking Docker containers...$(RESET)"
-	@docker-compose ps
+	@docker compose -f $(COMPOSE_FILE) ps
 	@echo "$(GREEN)Checking application logs...$(RESET)"
-	@docker-compose logs --tail=10 togglefox 2>/dev/null || echo "Application not running"
+	@docker compose -f $(COMPOSE_FILE) logs --tail=10 togglefox 2>/dev/null || echo "Application not running"
 
 tail-logs: ## Tail application logs
-	@docker-compose logs -f
+	@docker compose -f $(COMPOSE_FILE) logs -f
 
 watch-health: ## Watch health status continuously
 	@watch -n 2 'curl -s http://localhost:8080/actuator/health | jq .'

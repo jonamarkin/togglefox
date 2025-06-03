@@ -12,10 +12,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -23,6 +26,7 @@ import java.util.Optional;
 @Tag(name = "Feature Flags", description = "Feature flag management API")
 public class FeatureFlagController {
 
+    private static final Logger log = LoggerFactory.getLogger(FeatureFlagController.class);
     private final CreateFlagUseCase createFlagUseCase;
     private final ManageFlagUseCase manageFlagUseCase;
     private final FeatureFlagDtoMapper mapper;
@@ -47,10 +51,22 @@ public class FeatureFlagController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping
+    @Operation(summary = "Get all flags")
+    public ResponseEntity<List<FeatureFlagResponseDto>> getAllFlags() {
+        List<FeatureFlag> flags = (List<FeatureFlag>) manageFlagUseCase.getAllFlags();
+        List<FeatureFlagResponseDto> response = mapper.toResponseList(flags);
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{flagId}")
     @Operation(summary = "Get feature flag by ID")
     public ResponseEntity<FeatureFlagResponseDto> getFlag(
-            @Parameter(description = "Feature flag ID") @PathVariable String flagId) {
+            @Parameter(name = "flagId", description = "Feature flag ID", required = true)
+            @PathVariable String flagId) {
+
+        log.info("Get feature flag by ID: {}", flagId);
 
         FeatureFlagId id = FeatureFlagId.of(flagId);
         Optional<FeatureFlag> flag = manageFlagUseCase.getFlag(id);
@@ -62,7 +78,8 @@ public class FeatureFlagController {
     @PutMapping("/{flagId}/enable")
     @Operation(summary = "Enable a feature flag")
     public ResponseEntity<Void> enableFlag(
-            @Parameter(description = "Feature flag ID") @PathVariable String flagId) {
+            @Parameter(name = "flagId", description = "Feature flag ID", required = true)
+            @PathVariable String flagId) {
 
         var command = mapper.toEnableCommand(flagId);
         manageFlagUseCase.enableFlag(command);
@@ -73,7 +90,8 @@ public class FeatureFlagController {
     @PutMapping("/{flagId}/disable")
     @Operation(summary = "Disable a feature flag")
     public ResponseEntity<Void> disableFlag(
-            @Parameter(description = "Feature flag ID") @PathVariable String flagId) {
+            @Parameter(name = "flagId", description = "Feature flag ID", required = true)
+            @PathVariable String flagId) {
 
         FeatureFlagId id = FeatureFlagId.of(flagId);
         manageFlagUseCase.disableFlag(id);
@@ -84,7 +102,8 @@ public class FeatureFlagController {
     @PutMapping("/{flagId}/strategy")
     @Operation(summary = "Update rollout strategy")
     public ResponseEntity<Void> updateStrategy(
-            @Parameter(description = "Feature flag ID") @PathVariable String flagId,
+            @Parameter(name = "flagId", description = "Feature flag ID", required = true)
+            @PathVariable String flagId,
             @Valid @RequestBody UpdateStrategyRequestDto request) {
 
         var command = mapper.toUpdateStrategyCommand(flagId, request);

@@ -29,4 +29,9 @@ public interface ManageFlagUseCase {
      * Get a feature flag by ID
      */
     Optional<FeatureFlag> getFlag(FeatureFlagId flagId);
+
+    /**
+     * Get all feature flags
+     */
+    Iterable<FeatureFlag> getAllFlags();
 }

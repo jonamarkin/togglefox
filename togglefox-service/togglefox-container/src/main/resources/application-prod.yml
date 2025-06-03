@@ -10,8 +10,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
-  level:
-    com.markin.togglefox: INFO
-    org.springframework.web: WARN
   file:
     name: /var/log/togglefox/application.log
+  level:
+    com.markin.togglefox: DEBUG
+    org.springframework.web: DEBUG
+    org.springdoc: DEBUG
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

@@ -14,9 +14,9 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <java.version>21</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Spring Boot -->
@@ -39,8 +39,8 @@
         <testcontainers.version>1.21.0</testcontainers.version>
 
         <!-- Other -->
-        <jakarta.validation.version>3.0.2</jakarta.validation.version>
-        <swagger.version>2.2.0</swagger.version>
+        <jakarta.validation.version>3.1.0</jakarta.validation.version>
+        <swagger.version>2.8.8</swagger.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
     </properties>
@@ -179,6 +179,7 @@
                                 <version>0.2.0</version>
                             </path>
                         </annotationProcessorPaths>
+                        <parameters>true</parameters>
                     </configuration>
                 </plugin>
                 <plugin>

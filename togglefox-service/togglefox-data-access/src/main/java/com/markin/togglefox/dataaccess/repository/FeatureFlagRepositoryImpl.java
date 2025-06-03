@@ -63,4 +63,12 @@ public class FeatureFlagRepositoryImpl implements FeatureFlagRepository {
     public boolean existsByNameAndEnvironment(String name, Environment environment) {
         return jpaRepository.existsByNameAndEnvironment(name, environment.getName());
     }
+
+    @Override
+    public List<FeatureFlag> findAll(){
+        return jpaRepository.findAll()
+                .stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }

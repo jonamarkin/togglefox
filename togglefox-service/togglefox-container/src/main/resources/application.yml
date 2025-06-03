@@ -52,8 +52,10 @@ management:
       show-details: when_authorized
 
 logging:
+  file:
+    name: /var/log/togglefox/application.log
   level:
-    com.markin.togglefox: INFO
+    com.markin.togglefox: DEBUG
     org.springframework.web: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

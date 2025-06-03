@@ -140,4 +140,16 @@ public class FeatureFlagDtoMapper {
 
         return config;
     }
+
+    /**
+     * Map list of FeatureFlag to list of FeatureFlagResponseDto
+     */
+    public List<FeatureFlagResponseDto> toResponseList(List<FeatureFlag> flags) {
+        List<FeatureFlagResponseDto> responseList = new ArrayList<>();
+        for (FeatureFlag flag : flags) {
+            responseList.add(toResponse(flag));
+        }
+        return responseList;
+
+    }
 }

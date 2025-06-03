@@ -52,6 +52,11 @@ public class ManageFlagService implements ManageFlagUseCase {
     }
 
     @Override
+    public Iterable<FeatureFlag> getAllFlags() {
+        return repository.findAll();
+    }
+
+    @Override
     public void updateStrategy(UpdateStrategyCommand command) {
         FeatureFlagId flagId = FeatureFlagId.of(command.getFlagId());
         FeatureFlag flag = findFlagOrThrow(flagId);
